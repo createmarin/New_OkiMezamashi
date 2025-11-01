@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>問題を解かないと止まらない目覚まし時計</title>
+  <style>
+    body {
+      text-align: center;
+      background: #f5f5f5;
+      font-family: "Segoe UI", sans-serif;
+      padding: 30px;
+    }
+    h1 {
+      font-size: 2.5em;
+    }
+    #time {
+      font-size: 2em;
+      margin-bottom: 10px;
+    }
+    input, select, button {
+      font-size: 1em;
+      margin: 5px;
+      padding: 5px 10px;
+    }
+    #questionArea {
+      margin-top: 20px;
+      font-size: 1.2em;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>🕒 問題を解かないと止まらない目覚まし</h1>
+  <div id="time"></div>
+
+  <div>
+    <input type="time" id="alarmTime" />
+    <input type="file" id="alarmSound" accept="audio/*" />
+    <button id="setAlarm">アラーム設定</button>
+  </div>
+
+  <div id="status"></div>
+
+  <div id="questionArea">
+    <div id="questionText"></div>
+    <input type="text" id="answerInput" placeholder="答えを入力" />
+    <button id="submitAnswer">回答</button>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const timeEl = document.getElementById("time");
+    const statusEl = document.getElementById("status");
+    const questionArea = document.getElementById("questionArea");
+    const questionText = document.getElementById("questionText");
+    const resultEl = document.getElementById("result");
+    const answerInput = document.getElementById("answerInput");
+    const submitAnswer = document.getElementById("submitAnswer");
+
+    let alarmTime = null;
+    let alarmAudio = null;
+    let alarmInterval;
+    let questionIndex = 0;
+    let correctCount = 0;
+
+    function updateTime() {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2, "0");
+      const m = String(now.getMinutes()).padStart(2, "0");
+      const s = String(now.getSeconds()).padStart(2, "0");
+      timeEl.textContent = `${h}:${m}:${s}`;
+      if (alarmTime && `${h}:${m}` === alarmTime) {
+        startAlarm();
+        alarmTime = null;
+      }
+    }
+    setInterval(updateTime, 1000);
+
+    document.getElementById("setAlarm").onclick = () => {
+      const file = document.getElementById("alarmSound").files[0];
+      const t = document.getElementById("alarmTime").value;
+      if (!t || !file) {
+        alert("アラーム時刻と音声ファイルを設定してください！");
+        return;
+      }
+      alarmTime = t;
+      alarmAudio = new Audio(URL.createObjectURL(file));
+      statusEl.textContent = `⏰ アラーム設定中: ${t} に鳴ります`;
+    };
+
+    function startAlarm() {
+      statusEl.textContent = "🔔 アラーム発動中！3問正解で停止します";
+      alarmAudio.loop = true;
+      alarmAudio.play();
+      showQuestion();
+    }
+
+    function stopAlarm() {
+      alarmAudio.pause();
+      alarmAudio.currentTime = 0;
+      questionArea.style.display = "none";
+      statusEl.textContent = "✅ アラーム停止！おはよう！";
+    }
+
+    function showQuestion() {
+      questionArea.style.display = "block";
+      const today = new Date().getDay();
+      const q = getQuestion(today);
+      questionText.textContent = `Q${questionIndex + 1}: ${q.question}`;
+      questionText.dataset.answer = q.answer;
+      resultEl.textContent = "";
+      answerInput.value = "";
+      answerInput.focus();
+    }
+
+    submitAnswer.onclick = () => {
+      const userAnswer = answerInput.value.trim();
+      const correct = questionText.dataset.answer;
+      if (userAnswer === correct) {
+        correctCount++;
+        resultEl.textContent = "⭕ 正解！";
+        questionIndex++;
+        if (correctCount >= 3) {
+          stopAlarm();
+        } else {
+          showQuestion();
+        }
+      } else {
+        resultEl.textContent = `❌ 不正解！正解は「${correct}」でした`;
+        questionIndex++;
+        showQuestion();
+      }
+    };
+
+    function getQuestion(day) {
+      const rand = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+      switch (day) {
+        case 1: // 月曜：国語
+          return rand([
+            { question: "「一石二鳥」の意味は？", answer: "一度で二つの利益" },
+            { question: "「矛盾」を使った故事は？", answer: "矛と盾" },
+          ]);
+        case 2: // 火曜：数学（中2レベル）
+          const a = Math.floor(Math.random() * 20) + 1;
+          const b = Math.floor(Math.random() * 20) + 1;
+          return { question: `${a}×${b} = ?`, answer: String(a * b) };
+        case 3: // 水曜：英語
+          return rand([
+            { question: "「走る」を英語で？", answer: "run" },
+            { question: "「美しい」の英語は？", answer: "beautiful" },
+          ]);
+        case 4: // 木曜：理科
+          return rand([
+            { question: "水の化学式は？", answer: "H2O" },
+            { question: "酸素の化学式は？", answer: "O2" },
+          ]);
+        case 5: // 金曜：社会
+          return rand([
+            { question: "日本の首都は？", answer: "東京" },
+            { question: "明治維新が起こった年は？", answer: "1868" },
+          ]);
+        case 6: // 土曜：副教科
+          return rand([
+            { question: "ピアノの鍵盤は何色？", answer: "白と黒" },
+            { question: "赤と青を混ぜると何色？", answer: "紫" },
+          ]);
+        case 0: // 日曜：その他
+          return rand([
+            { question: "ネコは英語で？", answer: "cat" },
+            { question: "1週間は何日？", answer: "7" },
+          ]);
+      }
+    }
+  </script>
+</body>
+</html>
