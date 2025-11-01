@@ -139,7 +139,9 @@
         case 1: // 月曜：国語
           return rand([
             { question: "「一石二鳥」の意味は？", answer: "一度で二つの利益" },
-            { question: "「矛盾」を使った故事は？", answer: "矛と盾" },
+            { question: "「矛盾」の意味は？", answer: "辻褄が合わないこと" },
+            { question: "父に叱「られる」の品詞は？", answer: "受け身" },
+            { question: "疾を使うのはどれ？　しっこく　しっせき　しっぺい　しっけい　しっと", answer: "しっぺい" },
           ]);
         case 2: // 火曜：数学（中2レベル）
           const a = Math.floor(Math.random() * 20) + 1;
@@ -149,26 +151,38 @@
           return rand([
             { question: "「走る」を英語で？", answer: "run" },
             { question: "「美しい」の英語は？", answer: "beautiful" },
+            { question: "動詞はどれ?　Funny Look Stage", answer: "Look" },
+            { question: "現在完了進行形はどれ？　I have been living in Tokyo for five years. I have lived in Tokyo for five years.", answer: "I have been living in Tokyo for five years." },
           ]);
         case 4: // 木曜：理科
           return rand([
             { question: "水の化学式は？", answer: "H2O" },
             { question: "酸素の化学式は？", answer: "O2" },
+            { question: "酸素と化合した物質から酸素を奪い取るような化学変化を何という?", answer: "還元" },
+            { question: "化学変化が進むときに熱の発する反応を発熱反応というが、反対に熱を吸収する反応を何という？", answer: "吸熱反応" },
           ]);
         case 5: // 金曜：社会
           return rand([
             { question: "日本の首都は？", answer: "東京" },
             { question: "明治維新が起こった年は？", answer: "1868" },
+            { question: "中国の自動車道は中国自動車道と何？", answer: "山陽自動車道" },
+            { question: "関税自主権を完全に回復したのは誰？", answer: "小村寿太郎" },
           ]);
         case 6: // 土曜：副教科
           return rand([
             { question: "ピアノの鍵盤は何色？", answer: "白と黒" },
             { question: "赤と青を混ぜると何色？", answer: "紫" },
+            { question: "ナビゲーターが指示をしてドライバーがプログラムを書く形式のプログラミングを何という？", answer: "モブプログラミング" },
+            { question: "ハンバーグで牛乳を入れるのはなぜ?", answer: "肉のくさみ消し" },
           ]);
         case 0: // 日曜：その他
           return rand([
-            { question: "ネコは英語で？", answer: "cat" },
+            { question: "　OIVの正式名称は？", answer: "大情報バラエティnextstage" },
             { question: "1週間は何日？", answer: "7" },
+            { question: "朝活Liveの25年10月からのテーマ曲は？", answer: "夢の狭間" },
+            { question: "ウェイキングバッドガールのMVイラスト担当はじょーすけさんですが、ポジティブ星人のMVイラストは誰?", answer: "杜本" },
+            { question: "幸せですか　お元気ですか　ゆたかな暮らしのパートナー　誰からのごあいさつ？", answer: "オークワ" },
+            { question: "混色カードにかかれている欧文のうち、一番短いのは？", answer: "ArTec" },
           ]);
       }
     }
